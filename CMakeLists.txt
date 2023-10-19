@@ -19,7 +19,7 @@ set(${PROJECT_NAME}_HDR  ${HDR_FOLDER}/abstractsolver.h
 
 #add_subdirectory(example)
 
-add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRC} ${${PROJECT_NAME}_HDR})
+add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRC} ${${PROJECT_NAME}_HDR} "hdr/macropars.h" "src/macropars.cpp")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE -D_USE_MATH_DEFINES)
 

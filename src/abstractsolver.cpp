@@ -18,7 +18,7 @@ AbstractSolver::Nubble(const AbstractSolver& source)
 {
 	int x = x_coords * source.x_coords;
 	int y = y_coords * source.y_coords;
-	std::string value = value * source.value;
+	std::string value = source.value;
 	if (value == "Temp")
 	{
 
