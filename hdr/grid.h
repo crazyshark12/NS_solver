@@ -2,18 +2,18 @@
 #ifndef _GRID_
 #define _GRID_
 #include <iostream>
+#include <vector>
 
 class Grid 
 {
-	int x_coords, y_coords;
-	float primal_grid[10][10][4]{ 0 };
+	int x_size, y_size;
+	std::vector<std::vector<double>> Field;
 public:
 	Grid() {};
-	Grid(int, int);
-	Grid(float*);
-	Grid(const Grid& source);
+	Grid(int x_size, int y_size);
 	~Grid() {};
-	Grid get_cell_info(const Grid&);
+	Grid set_cell_info(int x_coords, int y_coords, double ev);
+	double get_cell_info(int x_coords, int y_coords);
 private:
 	//
 };
