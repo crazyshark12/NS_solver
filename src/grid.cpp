@@ -13,7 +13,7 @@ Grid
 
 Grid::set_cell_info(int x_coords, int y_coords, double ev)
 {
-	Field[x_coords][y_coords] = ev;
+	Field[x_coords[y_coords] = ev;
 }
 
 
