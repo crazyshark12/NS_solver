@@ -8,8 +8,8 @@
 
 struct Grid 
 {
-	int sizeX, sizeY;
-	double deltaX,  deltaY;
+	int sizeX,  sizeY;
+	double deltaX, deltaY;
 	std::vector<std::vector<Macropars>> field;
 
 	Grid() {};
