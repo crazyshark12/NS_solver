@@ -2,24 +2,16 @@
 #ifndef _MACROPARS_
 #define _MACROPARS_
 
-class Macropars
+struct Macropars
 {
 	double dens;
 	double pres;
-	double velc;
+	double velX, velY;
 	double temp;
-public:
+
 	Macropars() {};
-	Macropars(double dens, double pres, double velc, double temp);
-	~Macropars() {};
-	void setdens(double dens);
-	void setpres(double pres);
-	void setvelc(double velc);
-	void settemp(double temp);
-	double getdens();
-	double getpres();
-	double getvelc();
-	double gettemp();
+	Macropars(double dens_, double pres_, double velX_, double velY_, double temp_) :
+		dens(dens_), pres(pres_), velX(velX_), velY(velY_), temp(temp_) {};
 };
 
 #endif

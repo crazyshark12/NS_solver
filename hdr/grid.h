@@ -1,22 +1,19 @@
 #pragma once
 #ifndef _GRID_
 #define _GRID_
+#include "macropars.h"
 #include <iostream>
 #include <vector>
 #include <complex>
 
-class Grid 
+struct Grid 
 {
-	int x_size, y_size;
-	std::vector<std::complex<double>> Field;
-public:
+	int sizeX, sizeY;
+	double deltaX, deltaY;
+	std::vector<std::vector<Macropars>> field;
+
 	Grid() {};
 	Grid(int x_size, int y_size);
-	~Grid() {};
-	Grid set_cell_info(int x_coords, int y_coords, double ev);
-	double get_cell_info(int x_coords, int y_coords);
-private:
-	//
 };
 
 #endif

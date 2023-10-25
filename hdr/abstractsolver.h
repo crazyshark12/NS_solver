@@ -13,7 +13,6 @@ public:
 	AbstractSolver(std::string);
 	AbstractSolver(int, int);
 	AbstractSolver(const AbstractSolver& source);
-	~AbstractSolver() {};
 	AbstractSolver Nubble(const AbstractSolver&);
 };
 
