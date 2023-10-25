@@ -9,7 +9,7 @@
 struct Grid 
 {
 	int sizeX, sizeY;
-	double deltaX, deltaY;
+	double deltaX,  deltaY;
 	std::vector<std::vector<Macropars>> field;
 
 	Grid() {};
