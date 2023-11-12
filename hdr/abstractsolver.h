@@ -1,19 +1,21 @@
 #pragma once
 #ifndef _ABSTRACTSOLVER_
 #define _ABSTRRACTSOLVER_
-#include <string>
+#include <vector>
+#include "grid.h"
+#include "iterations.h"
 #include <iostream>
 
-class AbstractSolver 
+struct AbstractSolver 
 {
-	std::string value;
-	int x_coords, y_coords;
-public:
+	int iters;
+	double deltaX, deltaY;
+	Grid oldGrid;
+	Grid newGrid;
+	double deltaT;
 	AbstractSolver() {};
-	AbstractSolver(std::string);
-	AbstractSolver(int, int);
-	AbstractSolver(const AbstractSolver& source);
-	AbstractSolver Nubble(const AbstractSolver&);
+	AbstractSolver(int iters_, double deltaX_, double deltaY_, double deltaT_) :iters(iters_), deltaX(deltaX_), deltaY(deltaY_), deltaT(deltaT_) {};
+	void solve();
 };
 
 #endif

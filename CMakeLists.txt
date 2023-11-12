@@ -11,15 +11,17 @@ set(HDR_FOLDER "${PROJECT_SOURCE_DIR}/hdr")
 
 set(${PROJECT_NAME}_SRC  ${SRC_FOLDER}/abstractsolver.cpp
                          ${SRC_FOLDER}/grid.cpp
+                         ${SRC_FOLDER}/macropars.cpp
 )
 
 set(${PROJECT_NAME}_HDR  ${HDR_FOLDER}/abstractsolver.h
                          ${HDR_FOLDER}/grid.h
+                         ${HDR_FOLDER}/macropars.h
 )
 
-#add_subdirectory(example)
+add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRC} ${${PROJECT_NAME}_HDR})
 
-add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRC} ${${PROJECT_NAME}_HDR} "hdr/macropars.h" "src/macropars.cpp")
+add_subdirectory(example)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE -D_USE_MATH_DEFINES)
 

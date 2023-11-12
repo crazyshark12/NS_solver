@@ -1,39 +1,39 @@
 #include <iostream>
-#include <sstream>
-#include <abstractsolver.h>
+#include "abstractsolver.h"
 
-AbstractSolver::AbstractSolver(std::string source_value) 
+
+void AbstractSolver::solve()
 {
-	value = source_value;
-}
-
-AbstractSolver::AbstractSolver(int source_x, int source_y)
-{
-	x_coords = source_x;
-	y_coords = source_y;
-}
-
-AbstractSolver
-AbstractSolver::Nubble(const AbstractSolver& source) 
-{
-	int x = x_coords * source.x_coords;
-	int y = y_coords * source.y_coords;
-	std::string value = source.value;
-	if (value == "Temp")
+	double alpha = 0;
+	double phi = 0;
+	while (iters > 0)
 	{
+		Grid ersatzGrid;
+		// pressure
+		for (int i = 1; i < sizeof(oldGrid.field) - 1; ++i)
+		{
+			for (int j = 1; j < sizeof(oldGrid.field[0]) - 1; ++j)
+			{
+				//pressure
+				ersatzGrid.field[i][j].pres = oldGrid.field[i][j].pres - deltaT * ((oldGrid.field[i][j + 1].pres * oldGrid.field[i][j + 1].velX - oldGrid.field[i][j - 1].pres * oldGrid.field[i][j - 1].velX) / (2 * deltaX) + (oldGrid.field[i + 1][j].pres * oldGrid.field[i + 1][j].velY - oldGrid.field[i - 1][j].pres * oldGrid.field[i - 1][j].velY) / (2 * deltaY));
 
-	}
-	else if (value == "Dens")
-	{
+				//velocityX
 
-	}
-	else if (value == "Velo")
-	{
+				//velocityY
 
-	}
-	else 
-	{
+				//temperature
+				//double tl = oldGrid.field[i][j - 1].temp;
 
+				ersatzGrid.field[i][j].temp = -((oldGrid.field[i][j].velX * (oldGrid.field[i][j + 1].temp - oldGrid.field[i][j - 1].temp)) / (2 * deltaX) + (oldGrid.field[i][j].velY * (oldGrid.field[i + 1][j].temp - oldGrid.field[i - 1][j].temp)) / (2 * deltaY));
+				ersatzGrid.field[i][j].temp += alpha * ((((oldGrid.field[i][j + 1].temp - oldGrid.field[i][j].temp) / deltaX) - ((oldGrid.field[i][j].temp - oldGrid.field[i][j - 1].temp) / deltaX)) / deltaX + (((oldGrid.field[i + 1][j].temp - oldGrid.field[i][j].temp) / deltaY)));
+				ersatzGrid.field[i][j].temp += alpha * ((((oldGrid.field[i][j].temp - oldGrid.field[i - 1][j].temp) / deltaY)) / deltaY);
+				ersatzGrid.field[i][j].temp += phi;
+				ersatzGrid.field[i][j].temp *= deltaT;
+				ersatzGrid.field[i][j].temp += oldGrid.field[i][j].temp;
+			}
+		}
+		oldGrid = ersatzGrid;
 	}
+	newGrid = oldGrid;
 
 }

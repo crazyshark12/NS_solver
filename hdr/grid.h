@@ -4,12 +4,10 @@
 #include "macropars.h"
 #include <iostream>
 #include <vector>
-#include <complex>
 
 struct Grid 
 {
-	int sizeX,  sizeY;
-	double deltaX, deltaY;
+	int sizeX, sizeY;
 	std::vector<std::vector<Macropars>> field;
 
 	Grid() {};
@@ -17,3 +15,4 @@ struct Grid
 };
 
 #endif
+std::vector<int> v(10);
