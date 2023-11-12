@@ -3,7 +3,6 @@
 #define _ABSTRRACTSOLVER_
 #include <vector>
 #include "grid.h"
-#include "iterations.h"
 #include <iostream>
 
 struct AbstractSolver 
