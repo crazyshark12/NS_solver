@@ -19,15 +19,15 @@ void AbstractSolver::solve()
 			{
 				double F_x = 0;
 				double F_y = 0;
-				//pressure
-				double pr = oldGrid.field[i][j + 1].pres;
-				double pl = oldGrid.field[i][j - 1].pres;
-				double pu = oldGrid.field[i - 1][j].pres;
-				double pd = oldGrid.field[i + 1][j].pres;
+				//density
+				double dr = oldGrid.field[i][j + 1].dens;
+				double dl = oldGrid.field[i][j - 1].dens;
+				double du = oldGrid.field[i - 1][j].dens;
+				double dd = oldGrid.field[i + 1][j].dens;
 				double velX_ = oldGrid.field[i][j + 1].velX;
 				double velY_ = oldGrid.field[i + 1][j].velY;
 
-				ersatzGrid.field[i][j].pres = ((pr * velX_ - pl * velX_) / (2 * deltaX) + (pd * velY_ - pu * velY_) / (2 * deltaY));
+				ersatzGrid.field[i][j].pres = ((dr * velX_ - dl * velX_) / (2 * deltaX) + (dd * velY_ - du * velY_) / (2 * deltaY));
 				ersatzGrid.field[i][j].pres *= deltaT;
 				ersatzGrid.field[i][j].pres = oldGrid.field[i][j].pres - ersatzGrid.field[i][j].pres;
 
@@ -44,6 +44,10 @@ void AbstractSolver::solve()
 				double velYu = oldGrid.field[i - 1][j].velY;
 				double velYd = oldGrid.field[i + 1][j].velY;
 
+				double pr = oldGrid.field[i][j + 1].pres;
+				double pl = oldGrid.field[i][j - 1].pres;
+				double pu = oldGrid.field[i - 1][j].pres;
+				double pd = oldGrid.field[i + 1][j].pres;
 
 				ersatzGrid.field[i][j].velX = F_x - ((pr - pl) / (2 * deltaX)) / rho - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velXCurt;
 				ersatzGrid.field[i][j].velX += nu * (((velXr - velXCurt)/deltaX-(velXCurt - velXl)/deltaX)/deltaX + ((velXd - velXCurt)/deltaY-(velXCurt - velXu)/deltaY)/deltaY);
