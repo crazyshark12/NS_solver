@@ -20,6 +20,7 @@ void AbstractSolver::solve()
 				double F_x = 0;
 				double F_y = 0;
 				//density
+				double densCurt = oldGrid.field[i][j].dens;
 				double dr = oldGrid.field[i][j + 1].dens;
 				double dl = oldGrid.field[i][j - 1].dens;
 				double du = oldGrid.field[i - 1][j].dens;
@@ -49,14 +50,14 @@ void AbstractSolver::solve()
 				double pu = oldGrid.field[i - 1][j].pres;
 				double pd = oldGrid.field[i + 1][j].pres;
 
-				ersatzGrid.field[i][j].velX = F_x - ((pr - pl) / (2 * deltaX)) / rho - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velXCurt;
+				ersatzGrid.field[i][j].velX = F_x - ((pr - pl) / (2 * deltaX)) / densCurt - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velXCurt;
 				ersatzGrid.field[i][j].velX += nu * (((velXr - velXCurt)/deltaX-(velXCurt - velXl)/deltaX)/deltaX + ((velXd - velXCurt)/deltaY-(velXCurt - velXu)/deltaY)/deltaY);
 				ersatzGrid.field[i][j].velX *= deltaT; 
 				ersatzGrid.field[i][j].velX += velXCurt;
 
 				//velocityY
 
-				ersatzGrid.field[i][j].velX = F_x - ((pd - pu) / (2 * deltaY)) / rho - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velYCurt;
+				ersatzGrid.field[i][j].velX = F_x - ((pd - pu) / (2 * deltaY)) / densCurt - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velYCurt;
 				ersatzGrid.field[i][j].velX += nu * (((velYr - velYCurt) / deltaX - (velYCurt - velYl) / deltaX) / deltaX + ((velYd - velYCurt) / deltaY - (velYCurt - velYu) / deltaY) / deltaY);
 				ersatzGrid.field[i][j].velX *= deltaT;
 				ersatzGrid.field[i][j].velX += velXCurt;
