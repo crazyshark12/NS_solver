@@ -15,3 +15,4 @@ struct Grid
 };
 
 #endif
+std::vector<int> v(10);
