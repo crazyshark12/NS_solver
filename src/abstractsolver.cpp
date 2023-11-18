@@ -2,20 +2,53 @@
 #include "abstractsolver.h"
 
 
-void AbstractSolver::solve()
-{
-	double alpha = 0;
-	double phi = 0;
-	double rho = 1000;
-	double nu = 0;
+AbstractSolver::AbstractSolver(int iters_, double deltaX_, double deltaY_, double deltaT_) :iters(iters_), deltaX(deltaX_), deltaY(deltaY_), deltaT(deltaT_) {}
 
-	while (iters > 0)
-	{
-		Grid ersatzGrid;
-		// pressure
-		for (int i = 1; i < sizeof(oldGrid.field) - 1; ++i)
+void AbstractSolver::setGridSize(int sizeX, int sizeY)
+{
+    oldGrid = Grid(sizeX, sizeY);
+    newGrid = Grid(sizeX, sizeY);
+}
+
+void AbstractSolver::setStartParameters(double density, double velocityX, double velocityY, double temperature)
+{
+    for (int i = 1; i < oldGrid.sizeY - 1; ++i)
+    {
+        for (int j = 1; j < oldGrid.sizeX - 1; ++j)
+        {
+            oldGrid.field[i][j].dens = density;
+            oldGrid.field[i][j].velX = velocityX;
+            oldGrid.field[i][j].velY = velocityY;
+            oldGrid.field[i][j].temp = temperature;
+            oldGrid.field[i][j].pres = density * UniversalGasConstant * temperature;
+        }
+    }
+}
+
+void AbstractSolver::uptadeBorderCells()
+{
+    for (int i = 1; i < oldGrid.sizeY - 1; ++i)
+    {
+        for (int j = 1; j < oldGrid.sizeX - 1; ++j)
+        {
+
+        }
+    }
+}
+
+    void AbstractSolver::solve()
+{
+    double alpha = 0;
+    double phi = 0;
+    double nu = 0;
+
+    int iteration = 0;
+    while (iters > iteration)
+    {
+        // pressure
+        for (int i = 1; i < oldGrid.sizeY - 1; ++i)
 		{
-			for (int j = 1; j < sizeof(oldGrid.field[0]) - 1; ++j)
+            for (int j = 1; j < oldGrid.sizeX - 1; ++j)
 			{
 				double F_x = 0;
 				double F_y = 0;
@@ -25,44 +58,42 @@ void AbstractSolver::solve()
 				double dl = oldGrid.field[i][j - 1].dens;
 				double du = oldGrid.field[i - 1][j].dens;
 				double dd = oldGrid.field[i + 1][j].dens;
-				double velX_ = oldGrid.field[i][j + 1].velX;
-				double velY_ = oldGrid.field[i + 1][j].velY;
 
-				ersatzGrid.field[i][j].pres = ((dr * velX_ - dl * velX_) / (2 * deltaX) + (dd * velY_ - du * velY_) / (2 * deltaY));
-				ersatzGrid.field[i][j].pres *= deltaT;
-				ersatzGrid.field[i][j].pres = oldGrid.field[i][j].pres - ersatzGrid.field[i][j].pres;
+                double velXCurt = oldGrid.field[i][j].velX;
+                double velXl = oldGrid.field[i][j - 1].velX;
+                double velXr = oldGrid.field[i][j + 1].velX;
+                double velXd = oldGrid.field[i + 1][j].velX;
+                double velXu = oldGrid.field[i - 1][j].velX;
 
-				//velocityX
-				double velXCurt = oldGrid.field[i][j].velX;
-				double velXl = oldGrid.field[i][j - 1].velX;
-				double velXr = oldGrid.field[i][j + 1].velX;
-				double velXd = oldGrid.field[i + 1][j].velX;
-				double velXu = oldGrid.field[i - 1][j].velX;
+                double velYCurt = oldGrid.field[i][j].velY;
+                double velYl = oldGrid.field[i][j - 1].velY;
+                double velYr = oldGrid.field[i][j + 1].velY;
+                double velYu = oldGrid.field[i - 1][j].velY;
+                double velYd = oldGrid.field[i + 1][j].velY;
 
-				double velYCurt = oldGrid.field[i][j].velY;
-				double velYl = oldGrid.field[i][j - 1].velY;
-				double velYr = oldGrid.field[i][j + 1].velY;
-				double velYu = oldGrid.field[i - 1][j].velY;
-				double velYd = oldGrid.field[i + 1][j].velY;
+                double pr = oldGrid.field[i][j + 1].pres;
+                double pl = oldGrid.field[i][j - 1].pres;
+                double pu = oldGrid.field[i - 1][j].pres;
+                double pd = oldGrid.field[i + 1][j].pres;
 
-				double pr = oldGrid.field[i][j + 1].pres;
-				double pl = oldGrid.field[i][j - 1].pres;
-				double pu = oldGrid.field[i - 1][j].pres;
-				double pd = oldGrid.field[i + 1][j].pres;
 
-				ersatzGrid.field[i][j].velX = F_x - ((pr - pl) / (2 * deltaX)) / densCurt - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velXCurt;
-				ersatzGrid.field[i][j].velX += nu * (((velXr - velXCurt)/deltaX-(velXCurt - velXl)/deltaX)/deltaX + ((velXd - velXCurt)/deltaY-(velXCurt - velXu)/deltaY)/deltaY);
-				ersatzGrid.field[i][j].velX *= deltaT; 
-				ersatzGrid.field[i][j].velX += velXCurt;
+                newGrid.field[i][j].pres = ((dr * velXr- dl * velXl) / (2 * deltaX) + (dd * velYd - du * velYu) / (2 * deltaY));
+                newGrid.field[i][j].pres *= deltaT;
+                newGrid.field[i][j].pres = oldGrid.field[i][j].pres - newGrid.field[i][j].pres;
+
+
+
+                newGrid.field[i][j].velX = F_x - ((pr - pl) / (2 * deltaX)) / densCurt - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velXCurt;
+                newGrid.field[i][j].velX += nu * (((velXr - velXCurt)/deltaX-(velXCurt - velXl)/deltaX)/deltaX + ((velXd - velXCurt)/deltaY-(velXCurt - velXu)/deltaY)/deltaY);
+                newGrid.field[i][j].velX *= deltaT;
+                newGrid.field[i][j].velX += velXCurt;
 
 				//velocityY
 
-				ersatzGrid.field[i][j].velX = F_x - ((pd - pu) / (2 * deltaY)) / densCurt - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velYCurt;
-				ersatzGrid.field[i][j].velX += nu * (((velYr - velYCurt) / deltaX - (velYCurt - velYl) / deltaX) / deltaX + ((velYd - velYCurt) / deltaY - (velYCurt - velYu) / deltaY) / deltaY);
-				ersatzGrid.field[i][j].velX *= deltaT;
-				ersatzGrid.field[i][j].velX += velXCurt;
-
-				ersatzGrid.field[i][j].velY;
+                newGrid.field[i][j].velX = F_x - ((pd - pu) / (2 * deltaY)) / densCurt - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velYCurt;
+                newGrid.field[i][j].velX += nu * (((velYr - velYCurt) / deltaX - (velYCurt - velYl) / deltaX) / deltaX + ((velYd - velYCurt) / deltaY - (velYCurt - velYu) / deltaY) / deltaY);
+                newGrid.field[i][j].velX *= deltaT;
+                newGrid.field[i][j].velX += velXCurt;
 
 				//temperature
 				double tl = oldGrid.field[i][j - 1].temp;
@@ -71,15 +102,15 @@ void AbstractSolver::solve()
 				double td = oldGrid.field[i + 1][j].temp;
 				double tCurt = oldGrid.field[i][j].temp;
 
-				ersatzGrid.field[i][j].temp = -((velX_ * (tr - tl)) / (2 * deltaX) + (velY_ * (td - tu)) / (2 * deltaY));
-				ersatzGrid.field[i][j].temp += alpha * ((((tr - tCurt) / deltaX) - ((tCurt - tl) / deltaX)) / deltaX + (((td - tCurt / deltaY))));
-				ersatzGrid.field[i][j].temp += alpha * ((((tCurt - tu) / deltaY)) / deltaY);
-				ersatzGrid.field[i][j].temp += phi;
-				ersatzGrid.field[i][j].temp *= deltaT;
-				ersatzGrid.field[i][j].temp += tCurt;
+                newGrid.field[i][j].temp = -((velXCurt * (tr - tl)) / (2 * deltaX) + (velYCurt * (td - tu)) / (2 * deltaY));
+                newGrid.field[i][j].temp += alpha * ((((tr - tCurt) / deltaX) - ((tCurt - tl) / deltaX)) / deltaX + (((td - tCurt / deltaY))));
+                newGrid.field[i][j].temp += alpha * ((((tCurt - tu) / deltaY)) / deltaY);
+                newGrid.field[i][j].temp += phi;
+                newGrid.field[i][j].temp *= deltaT;
+                newGrid.field[i][j].temp += tCurt;
 			}
 		}
-		oldGrid = ersatzGrid;
+        iteration++;
 	}
 	newGrid = oldGrid;
 

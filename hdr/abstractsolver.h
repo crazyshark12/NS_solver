@@ -5,6 +5,8 @@
 #include "grid.h"
 #include <iostream>
 
+const double UniversalGasConstant = 8.3144598;
+
 struct AbstractSolver 
 {
 	int iters;
@@ -13,8 +15,11 @@ struct AbstractSolver
 	Grid newGrid;
 	double deltaT;
 	AbstractSolver() {};
-	AbstractSolver(int iters_, double deltaX_, double deltaY_, double deltaT_) :iters(iters_), deltaX(deltaX_), deltaY(deltaY_), deltaT(deltaT_) {};
-	void solve();
+    AbstractSolver(int iters_, double deltaX_, double deltaY_, double deltaT_);
+    void setGridSize(int sizeX, int sizeY);
+    void setStartParameters(double density, double velocityX, double velocityY, double temperature);
+    void uptadeBorderCells();
+    void solve();
 };
 
 #endif
