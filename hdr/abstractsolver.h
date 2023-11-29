@@ -20,6 +20,7 @@ struct AbstractSolver
 	void setStartParameters(double density, double velocityX, double velocityY, double temperature);
 	void uptadeBorderCells();
 	void solve();
+	void meteorite(int xCoords_, int yCoords_, int index_, double value_);
 };
 
 #endif

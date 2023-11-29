@@ -26,6 +26,7 @@ void AbstractSolver::setStartParameters(double density, double velocityX, double
     uptadeBorderCells();
 }
 
+
 void AbstractSolver::uptadeBorderCells()
 {
     double Twall = 300;
@@ -42,9 +43,9 @@ void AbstractSolver::uptadeBorderCells()
                 oldGrid.field[i][j].pres = oldGrid.field[i][j].dens * UniversalGasConstant * oldGrid.field[i][j].temp;
             }
         }
-        else if (i == oldGrid.sizeY - 1)
+        else if(i == oldGrid.sizeY)
         {
-            for (int j = 0; j < oldGrid.sizeX; ++j)
+            for (int j = 1; j < oldGrid.sizeX - 1; ++j)
             {
                 oldGrid.field[i][j].dens = oldGrid.field[i - 1][j].dens;
                 oldGrid.field[i][j].velX = oldGrid.field[i - 1][j].velX;
@@ -154,10 +155,26 @@ void AbstractSolver::solve()
                 newGrid.field[i][j].pres = newGrid.field[i][j].dens * UniversalGasConstant * newGrid.field[i][j].temp;
             }
         }
-
         iteration++;
         oldGrid = newGrid;
         uptadeBorderCells();
     }
 
+}
+
+
+void AbstractSolver::meteorite(int xCoords_, int yCoords_, int index_, double value_)
+{
+    switch(index_)
+    {
+        case 1:
+            oldGrid.field[xCoords_][yCoords_].dens = value_;
+            break;
+        case 2:
+            oldGrid.field[xCoords_][yCoords_].pres = value_;
+            break;
+        case 3:
+            oldGrid.field[xCoords_][yCoords_].temp = value_;
+            break;
+    }
 }
