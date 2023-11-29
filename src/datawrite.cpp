@@ -14,6 +14,10 @@ std::filesystem::path DataWriter::createTimeDirectory(double time)
     return localDir;
 }
 
+void DataWriter::setDelta_h(double dh)
+{
+    this->dh = dh;
+}
 
 void DataWriter::writeData(std::vector<Macropars> data, double time)
 {
