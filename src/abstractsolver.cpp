@@ -23,7 +23,12 @@ void AbstractSolver::setStartParameters(double density, double velocityX, double
             oldGrid.field[i][j].pres = density * UniversalGasConstant * temperature;
         }
     }
-    
+    uptadeBorderCells();
+}
+
+void AbstractSolver::uptadeBorderCells()
+{
+    double Twall = 300;
     for (int i = 0; i < oldGrid.sizeY; ++i)
     {
         if (i == 0)
@@ -31,62 +36,42 @@ void AbstractSolver::setStartParameters(double density, double velocityX, double
             for (int j = 1; j < oldGrid.sizeX - 1; ++j)
             {
                 oldGrid.field[i][j].dens = oldGrid.field[i + 1][j].dens;
+                oldGrid.field[i][j].velX = oldGrid.field[i + 1][j].velX;
                 oldGrid.field[i][j].velY = -oldGrid.field[i + 1][j].velY;
-                oldGrid.field[i][j].temp = -oldGrid.field[i + 1][j].temp;
+                oldGrid.field[i][j].temp = -oldGrid.field[i + 1][j].temp + 2 * Twall;
+                oldGrid.field[i][j].pres = oldGrid.field[i][j].dens * UniversalGasConstant * oldGrid.field[i][j].temp;
             }
         }
-        else if (i == oldGrid.sizeY)
+        else if (i == oldGrid.sizeY - 1)
         {
             for (int j = 0; j < oldGrid.sizeX; ++j)
             {
                 oldGrid.field[i][j].dens = oldGrid.field[i - 1][j].dens;
+                oldGrid.field[i][j].velX = oldGrid.field[i - 1][j].velX;
                 oldGrid.field[i][j].velY = -oldGrid.field[i - 1][j].velY;
-                oldGrid.field[i][j].temp = -oldGrid.field[i - 1][j].temp;
+                oldGrid.field[i][j].temp = -oldGrid.field[i - 1][j].temp + 2 * Twall;
+                oldGrid.field[i][j].pres = oldGrid.field[i][j].dens * UniversalGasConstant * oldGrid.field[i][j].temp;
             }
         }
-        else 
-        {
-            for (int j = 0; j < oldGrid.sizeX; ++j) {
-                if (j == 0)
-                {
-                    oldGrid.field[i][j].dens = oldGrid.field[i][j + 1].dens;
-                    oldGrid.field[i][j].velY = -oldGrid.field[i][j + 1].velY;
-                    oldGrid.field[i][j].temp = -oldGrid.field[i][j + 1].temp;
-                }
-                else if (j == oldGrid.sizeX - 1) 
-                {
-                    oldGrid.field[i][j].dens = oldGrid.field[i][j - 1].dens;
-                    oldGrid.field[i][j].velY = -oldGrid.field[i][j - 1].velY;
-                    oldGrid.field[i][j].temp = -oldGrid.field[i][j - 1].temp;
-                }
-            }
-        }
-    }
-}
-
-void AbstractSolver::uptadeBorderCells()
-{
-    for (int i = 0; i < oldGrid.sizeY; ++i)
-    {
-        if (i == 0 || i == oldGrid.sizeY) 
-        {
-            for (int j = 1; j < oldGrid.sizeX - 1; ++j)
-            {
-                newGrid.field[i][j].dens = oldGrid.field[i][j].dens;
-                newGrid.field[i][j].velY = -oldGrid.field[i][j].velY + 2 * oldGrid.field[i][j].velX;
-                newGrid.field[i][j].temp = -oldGrid.field[i][j].temp;
-            }
-        }
-        else 
+        else
         {
             for (int j = 0; j < oldGrid.sizeX; ++j)
             {
-                if (j == 0 || j == oldGrid.sizeX - 1)
+                if (j == 0)
                 {
-                    newGrid.field[i][j].dens = oldGrid.field[i][j].dens;
-                    newGrid.field[i][j].velY = -oldGrid.field[i][j].velY + 2 * oldGrid.field[i][j].velX;
-                    newGrid.field[i][j].temp = -oldGrid.field[i][j].temp;
+                    oldGrid.field[i][j].dens = oldGrid.field[i][j + 1].dens;
+                    oldGrid.field[i][j].velX = oldGrid.field[i][j + 1].velX;
+                    oldGrid.field[i][j].velY = -oldGrid.field[i][j + 1].velY;
+                    oldGrid.field[i][j].temp = -oldGrid.field[i][j + 1].temp + 2 * Twall;
                 }
+                else if (j == oldGrid.sizeX - 1)
+                {
+                    oldGrid.field[i][j].dens = oldGrid.field[i][j - 1].dens;
+                    oldGrid.field[i][j].velX = oldGrid.field[i][j - 1].velX;
+                    oldGrid.field[i][j].velY = -oldGrid.field[i][j - 1].velY;
+                    oldGrid.field[i][j].temp = -oldGrid.field[i][j - 1].temp + 2 * Twall;
+                }
+                oldGrid.field[i][j].pres = oldGrid.field[i][j].dens * UniversalGasConstant * oldGrid.field[i][j].temp;
             }
         }
     }
@@ -94,9 +79,9 @@ void AbstractSolver::uptadeBorderCells()
 
 void AbstractSolver::solve()
 {
-    double alpha = 0;
+    double alpha = 0.05;
     double phi = 0;
-    double nu = 0;
+    double nu = 0.01;
 
     int iteration = 0;
     while (iters > iteration)
@@ -133,11 +118,11 @@ void AbstractSolver::solve()
                 double pd = oldGrid.field[i + 1][j].pres;
 
 
-                newGrid.field[i][j].pres = ((dr * velXr - dl * velXl) / (2 * deltaX) + (dd * velYd - du * velYu) / (2 * deltaY));
-                newGrid.field[i][j].pres *= deltaT;
-                newGrid.field[i][j].pres = oldGrid.field[i][j].pres - newGrid.field[i][j].pres;
+                newGrid.field[i][j].dens = ((dr * velXr - dl * velXl) / (2 * deltaX) + (dd * velYd - du * velYu) / (2 * deltaY));
+                newGrid.field[i][j].dens *= deltaT;
+                newGrid.field[i][j].dens = oldGrid.field[i][j].dens - newGrid.field[i][j].dens;
 
-
+                //velocityX
 
                 newGrid.field[i][j].velX = F_x - ((pr - pl) / (2 * deltaX)) / densCurt - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velXCurt;
                 newGrid.field[i][j].velX += nu * (((velXr - velXCurt) / deltaX - (velXCurt - velXl) / deltaX) / deltaX + ((velXd - velXCurt) / deltaY - (velXCurt - velXu) / deltaY) / deltaY);
@@ -146,10 +131,10 @@ void AbstractSolver::solve()
 
                 //velocityY
 
-                newGrid.field[i][j].velX = F_x - ((pd - pu) / (2 * deltaY)) / densCurt - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velYCurt;
-                newGrid.field[i][j].velX += nu * (((velYr - velYCurt) / deltaX - (velYCurt - velYl) / deltaX) / deltaX + ((velYd - velYCurt) / deltaY - (velYCurt - velYu) / deltaY) / deltaY);
-                newGrid.field[i][j].velX *= deltaT;
-                newGrid.field[i][j].velX += velXCurt;
+                newGrid.field[i][j].velY = F_y - ((pd - pu) / (2 * deltaY)) / densCurt - ((velXr - velXl) / (2 * deltaX) + (velYd - velYu) / (2 * deltaY)) * velYCurt;
+                newGrid.field[i][j].velY += nu * (((velYr - velYCurt) / deltaX - (velYCurt - velYl) / deltaX) / deltaX + ((velYd - velYCurt) / deltaY - (velYCurt - velYu) / deltaY) / deltaY);
+                newGrid.field[i][j].velY *= deltaT;
+                newGrid.field[i][j].velY += velYCurt;
 
                 //temperature
                 double tl = oldGrid.field[i][j - 1].temp;
@@ -159,15 +144,20 @@ void AbstractSolver::solve()
                 double tCurt = oldGrid.field[i][j].temp;
 
                 newGrid.field[i][j].temp = -((velXCurt * (tr - tl)) / (2 * deltaX) + (velYCurt * (td - tu)) / (2 * deltaY));
-                newGrid.field[i][j].temp += alpha * ((((tr - tCurt) / deltaX) - ((tCurt - tl) / deltaX)) / deltaX + (((td - tCurt / deltaY))));
-                newGrid.field[i][j].temp += alpha * ((((tCurt - tu) / deltaY)) / deltaY);
+                newGrid.field[i][j].temp += alpha * (tr - 2*tCurt + tl) / (pow( deltaX, 2));
+                newGrid.field[i][j].temp += alpha * (td - 2*tCurt + tu) / (pow( deltaY, 2));
                 newGrid.field[i][j].temp += phi;
                 newGrid.field[i][j].temp *= deltaT;
                 newGrid.field[i][j].temp += tCurt;
+
+                // пересчет давления с помощью уравнения состояния
+                newGrid.field[i][j].pres = newGrid.field[i][j].dens * UniversalGasConstant * newGrid.field[i][j].temp;
             }
         }
+
         iteration++;
+        oldGrid = newGrid;
+        uptadeBorderCells();
     }
-    newGrid = oldGrid;
 
 }
