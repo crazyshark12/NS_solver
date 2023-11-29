@@ -23,7 +23,7 @@ void AbstractSolver::setStartParameters(double density, double velocityX, double
             oldGrid.field[i][j].pres = density * UniversalGasConstant * temperature;
         }
     }
-    
+
     for (int i = 0; i < oldGrid.sizeY; ++i)
     {
         if (i == 0)
@@ -44,7 +44,7 @@ void AbstractSolver::setStartParameters(double density, double velocityX, double
                 oldGrid.field[i][j].temp = -oldGrid.field[i - 1][j].temp;
             }
         }
-        else 
+        else
         {
             for (int j = 0; j < oldGrid.sizeX; ++j) {
                 if (j == 0)
@@ -53,7 +53,7 @@ void AbstractSolver::setStartParameters(double density, double velocityX, double
                     oldGrid.field[i][j].velY = -oldGrid.field[i][j + 1].velY;
                     oldGrid.field[i][j].temp = -oldGrid.field[i][j + 1].temp;
                 }
-                else if (j == oldGrid.sizeX - 1) 
+                else if (j == oldGrid.sizeX - 1)
                 {
                     oldGrid.field[i][j].dens = oldGrid.field[i][j - 1].dens;
                     oldGrid.field[i][j].velY = -oldGrid.field[i][j - 1].velY;
@@ -68,7 +68,7 @@ void AbstractSolver::uptadeBorderCells()
 {
     for (int i = 0; i < oldGrid.sizeY; ++i)
     {
-        if (i == 0 || i == oldGrid.sizeY) 
+        if (i == 0 || i == oldGrid.sizeY)
         {
             for (int j = 1; j < oldGrid.sizeX - 1; ++j)
             {
@@ -77,7 +77,7 @@ void AbstractSolver::uptadeBorderCells()
                 newGrid.field[i][j].temp = -oldGrid.field[i][j].temp;
             }
         }
-        else 
+        else
         {
             for (int j = 0; j < oldGrid.sizeX; ++j)
             {
@@ -168,6 +168,22 @@ void AbstractSolver::solve()
         }
         iteration++;
     }
-    oldGrid = newGrid;
+    newGrid = oldGrid;
 
+}
+
+void AbstractSolver::meteorite(int xCoords_, int yCoords_, int index_, double value_)
+{
+    switch(i)
+    {
+        case 1:
+            oldGrid.field[xCoords_][yCoords_].dens = value;
+            break;
+        case 2:
+            oldGrid.field[xCoords_][yCoords_].pres = value;
+            break;
+        case 3:
+            oldGrid.field[xCoords_][yCoords_].temp = value;
+            break;
+    }
 }

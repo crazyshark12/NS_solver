@@ -13,14 +13,14 @@ set(${PROJECT_NAME}_SRC  ${SRC_FOLDER}/abstractsolver.cpp
                          ${SRC_FOLDER}/grid.cpp
                          ${SRC_FOLDER}/macropars.cpp
                          ${SRC_FOLDER}/datawriter.cpp
-                         ${SRC_FOLDER}/meteorite.cpp
+                         ${SRC_FOLDER}/visualizer.cpp
 )
 
 set(${PROJECT_NAME}_HDR  ${HDR_FOLDER}/abstractsolver.h
                          ${HDR_FOLDER}/grid.h
                          ${HDR_FOLDER}/macropars.h
                          ${SRC_FOLDER}/datawriter.h
-                         ${SRC_FOLDER}/meteorite.h
+                         ${SRC_FOLDER}/visualizer.h
 )
 
 add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRC} ${${PROJECT_NAME}_HDR})
