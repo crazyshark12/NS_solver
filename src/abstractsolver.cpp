@@ -168,6 +168,6 @@ void AbstractSolver::solve()
         }
         iteration++;
     }
-    newGrid = oldGrid;
+    oldGrid = newGrid;
 
 }
