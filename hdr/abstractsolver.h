@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _ABSTRACTSOLVER_
-#define _ABSTRRACTSOLVER_
+#define _ABSTRACTSOLVER_
+
 #include <vector>
 #include "grid.h"
 #include <iostream>

@@ -12,13 +12,13 @@ set(HDR_FOLDER "${PROJECT_SOURCE_DIR}/hdr")
 set(${PROJECT_NAME}_SRC  ${SRC_FOLDER}/abstractsolver.cpp
                          ${SRC_FOLDER}/grid.cpp
                          ${SRC_FOLDER}/macropars.cpp
-                         ${SRC_FOLDER}/visualizer.cpp
+                         ${SRC_FOLDER}/datawrite.cpp
 )
 
 set(${PROJECT_NAME}_HDR  ${HDR_FOLDER}/abstractsolver.h
                          ${HDR_FOLDER}/grid.h
                          ${HDR_FOLDER}/macropars.h
-                         ${HDR_FOLDER}/visualizer.h
+                         ${HDR_FOLDER}/datawrite.h
 )
 
 add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRC} ${${PROJECT_NAME}_HDR})
