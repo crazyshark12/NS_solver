@@ -1,0 +1,11 @@
+# ninja log v5
+4	813	7239601102559138	CMakeFiles/NS_solve.dir/src/abstractsolver.cpp.obj	c1abb6357ff2136c
+9	475	7239199797991413	CMakeFiles/NS_solve.dir/src/grid.cpp.obj	245cced08feb846
+2	746	7239588227466376	CMakeFiles/NS_solve.dir/src/datawriter_fixed.cpp.obj	ad7178e2fb0461a4
+4	999	7239598186409079	example/CMakeFiles/NS_solve_example.dir/main.cpp.obj	96ed890a890f1048
+1018	1330	7239601107174426	example/NS_solve_example.exe	1b227266451dcecb
+815	1018	7239601103765249	NS_solved.lib	b354dd5b0e3c02da
+2	782	7240220918512584	example/CMakeFiles/NS_solve_example.dir/main.cpp.obj	96ed890a890f1048
+783	1486	7240220924686035	example/NS_solve_example.exe	1b227266451dcecb
+2	618	7240221714280540	example/CMakeFiles/NS_solve_example.dir/main.cpp.obj	96ed890a890f1048
+619	887	7240221716431557	example/NS_solve_example.exe	1b227266451dcecb

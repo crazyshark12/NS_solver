@@ -1,0 +1,6 @@
+C:/Users/ASUS/Desktop/Navier-Stokes_test/Navier-Stokes_Testing/NS_solve/out/build/x64-debug/CMakeFiles/NS_solve.dir
+C:/Users/ASUS/Desktop/Navier-Stokes_test/Navier-Stokes_Testing/NS_solve/out/build/x64-debug/CMakeFiles/edit_cache.dir
+C:/Users/ASUS/Desktop/Navier-Stokes_test/Navier-Stokes_Testing/NS_solve/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/ASUS/Desktop/Navier-Stokes_test/Navier-Stokes_Testing/NS_solve/out/build/x64-debug/example/CMakeFiles/NS_solve_example.dir
+C:/Users/ASUS/Desktop/Navier-Stokes_test/Navier-Stokes_Testing/NS_solve/out/build/x64-debug/example/CMakeFiles/edit_cache.dir
+C:/Users/ASUS/Desktop/Navier-Stokes_test/Navier-Stokes_Testing/NS_solve/out/build/x64-debug/example/CMakeFiles/rebuild_cache.dir
