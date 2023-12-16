@@ -11,8 +11,8 @@ struct DataWriter
 {
 
     DataWriter(std::string pathName);
-    std::filesystem::path createTimeDirectory(double time);
-    void writeData(std::vector<Macropars> data, double time);
+    std::filesystem::path createTimeDirectory(int time);
+    void writeData(std::vector<std::vector<Macropars>> data, int time);
     void setDelta_h(double dh);
 
 private:

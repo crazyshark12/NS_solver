@@ -29,7 +29,7 @@ void AbstractSolver::setStartParameters(double density, double velocityX, double
 
 void AbstractSolver::uptadeBorderCells()
 {
-    double Twall = 300;
+    double Twall = 400;
     for (int i = 0; i < oldGrid.sizeY; ++i)
     {
         if (i == 0)
@@ -37,19 +37,19 @@ void AbstractSolver::uptadeBorderCells()
             for (int j = 1; j < oldGrid.sizeX - 1; ++j)
             {
                 oldGrid.field[i][j].dens = oldGrid.field[i + 1][j].dens;
-                oldGrid.field[i][j].velX = oldGrid.field[i + 1][j].velX;
-                oldGrid.field[i][j].velY = -oldGrid.field[i + 1][j].velY;
+                oldGrid.field[i][j].velX = 0; //oldGrid.field[i + 1][j].velX;
+                oldGrid.field[i][j].velY = 0; //-oldGrid.field[i + 1][j].velY;
                 oldGrid.field[i][j].temp = -oldGrid.field[i + 1][j].temp + 2 * Twall;
                 oldGrid.field[i][j].pres = oldGrid.field[i][j].dens * UniversalGasConstant * oldGrid.field[i][j].temp;
             }
         }
-        else if (i == oldGrid.sizeY)
+        else if (i == oldGrid.sizeY - 1)
         {
             for (int j = 1; j < oldGrid.sizeX - 1; ++j)
             {
                 oldGrid.field[i][j].dens = oldGrid.field[i - 1][j].dens;
-                oldGrid.field[i][j].velX = oldGrid.field[i - 1][j].velX;
-                oldGrid.field[i][j].velY = -oldGrid.field[i - 1][j].velY;
+                oldGrid.field[i][j].velX = 0; //oldGrid.field[i - 1][j].velX;
+                oldGrid.field[i][j].velY = 0; //-oldGrid.field[i - 1][j].velY;
                 oldGrid.field[i][j].temp = -oldGrid.field[i - 1][j].temp + 2 * Twall;
                 oldGrid.field[i][j].pres = oldGrid.field[i][j].dens * UniversalGasConstant * oldGrid.field[i][j].temp;
             }
@@ -61,15 +61,15 @@ void AbstractSolver::uptadeBorderCells()
                 if (j == 0)
                 {
                     oldGrid.field[i][j].dens = oldGrid.field[i][j + 1].dens;
-                    oldGrid.field[i][j].velX = oldGrid.field[i][j + 1].velX;
-                    oldGrid.field[i][j].velY = -oldGrid.field[i][j + 1].velY;
+                    oldGrid.field[i][j].velX = 0; //oldGrid.field[i][j + 1].velX;
+                    oldGrid.field[i][j].velY = 0; //-oldGrid.field[i][j + 1].velY;
                     oldGrid.field[i][j].temp = -oldGrid.field[i][j + 1].temp + 2 * Twall;
                 }
                 else if (j == oldGrid.sizeX - 1)
                 {
                     oldGrid.field[i][j].dens = oldGrid.field[i][j - 1].dens;
-                    oldGrid.field[i][j].velX = oldGrid.field[i][j - 1].velX;
-                    oldGrid.field[i][j].velY = -oldGrid.field[i][j - 1].velY;
+                    oldGrid.field[i][j].velX = 0; //oldGrid.field[i][j - 1].velX;
+                    oldGrid.field[i][j].velY = 0; //-oldGrid.field[i][j - 1].velY;
                     oldGrid.field[i][j].temp = -oldGrid.field[i][j - 1].temp + 2 * Twall;
                 }
                 oldGrid.field[i][j].pres = oldGrid.field[i][j].dens * UniversalGasConstant * oldGrid.field[i][j].temp;
@@ -80,6 +80,8 @@ void AbstractSolver::uptadeBorderCells()
 
 void AbstractSolver::solve()
 {
+    DataWriter writer("temp");
+
     double alpha = 0.05;
     double phi = 0;
     double nu = 0.01;
@@ -158,13 +160,10 @@ void AbstractSolver::solve()
         iteration++;
         oldGrid = newGrid;
         uptadeBorderCells();  
-    }
-    DataWriter writer("temp");
-    for (int kk = 0; kk < 10; ++kk)
-    {
-        writer.writeData(oldGrid.field[kk], 10);
-    }
 
+        if(iteration % 1000 == 0)
+            writer.writeData(oldGrid.field, iteration);
+    }
 }
 
 

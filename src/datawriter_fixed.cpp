@@ -7,7 +7,7 @@ DataWriter::DataWriter(std::string pathName_) : directory(pathName_)
     std::filesystem::create_directories(dataDir);
 }
 
-std::filesystem::path DataWriter::createTimeDirectory(double time)
+std::filesystem::path DataWriter::createTimeDirectory(int time)
 {
     std::filesystem::path localDir = directory / "data" / std::to_string(time);
     std::filesystem::create_directories(localDir);
@@ -19,49 +19,39 @@ void DataWriter::setDelta_h(double dh)
     this->dh = dh;
 }
 
-void DataWriter::writeData(std::vector<Macropars> data, double time)
+void DataWriter::writeData(std::vector<std::vector<Macropars>> data, int iter)
 {
     
-    std::filesystem::path localDir = createTimeDirectory(time);
-    std::ofstream dens(localDir / "dens.txt");
-    std::ofstream pres(localDir / "pres.txt");
-    std::ofstream velX(localDir / "velX.txt");
-    std::ofstream velY(localDir / "velY.txt");
-    std::ofstream temp(localDir / "temp.txt");
+    std::filesystem::path localDir = createTimeDirectory(iter);
+    std::ofstream dens(localDir / "dens.txt",std::ios::out);
+    std::ofstream pres(localDir / "pres.txt",std::ios::out);
+    std::ofstream velX(localDir / "velX.txt",std::ios::out);
+    std::ofstream velY(localDir / "velY.txt",std::ios::out);
+    std::ofstream temp(localDir / "temp.txt",std::ios::out);
 
-    for (size_t i = 0; i < data.size(); i++) 
+
+    for (size_t i = 1; i < data.size() - 1; i++)
     {
-        double h = dh * i; 
-        for (size_t j = 0; j < 10; j++) 
+        for (size_t j = 1; j < data[i].size() - 1; j++)
         {
-            dens << data[i].dens << " ";
+            dens << data[i][j].dens << " ";
+            pres << data[i][j].pres << " ";
+            velX << data[i][j].velX << " ";
+            velY << data[i][j].velY << " ";
+            temp << data[i][j].temp << " ";
         }
         dens << "\n";
-
-        for (size_t j = 0; j < 10; j++)
-        {
-            pres << data[i].pres << " ";
-        }
         pres << "\n";
-
-        for (size_t j = 0; j < 10; j++)
-        {
-            velX << data[i].velX << " ";
-        }
         velX << "\n";
-
-        for (size_t j = 0; j < 10; j++)
-        {
-            velY << data[i].velY << " ";
-        }
         velY << "\n";
-
-        for (size_t j = 0; j < 10; j++)
-        {
-            temp << data[i].temp << " ";
-        }
         temp << "\n";
     }
+
+    dens.close();
+    pres.close();
+    velX.close();
+    velY.close();
+    temp.close();
 }
 
 void DataReader::getPoints(std::vector<Macropars>& points)
