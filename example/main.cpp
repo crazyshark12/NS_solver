@@ -5,9 +5,9 @@
 int main()
 {
 	std::cout << "Bruh";
-    AbstractSolver solver(100000, 1, 1, 0.00001);
+    AbstractSolver solver(10000000, 1, 1, 1e-6);
     solver.setGridSize(100, 100);
-    solver.setStartParameters(1000, 0, 0, 300);
+    solver.setStartParameters(1.2, 0, 0, 300);
 	solver.solve();
 
 	return EXIT_SUCCESS;
